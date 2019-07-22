@@ -2,13 +2,13 @@
   withHoogle ? true
 }:
 let
-  inherit (import <nixpkgs> {}) fetchFromGitHub;
+  /* inherit (import <nixpkgs> {}) fetchFromGitHub;
   nixpkgs = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
     rev = "19.03";
     sha256 = "0q2m2qhyga9yq29yz90ywgjbn9hdahs7i8wwlq7b55rdbyiwa5dy";
-  };
+  }; */
   config = {
     packageOverrides = pkgs: rec {
       haskellPackages = pkgs.haskellPackages.override {
@@ -26,7 +26,7 @@ let
       };
     };
   };
-  pkgs = import nixpkgs { inherit config; };
+  pkgs = import <nixpkgs> { inherit config; };
   drv = pkgs.haskellPackages.stream-web;
 in
   if pkgs.lib.inNixShell

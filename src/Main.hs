@@ -8,11 +8,20 @@ import Streamly
 import Types
 import Streamly.Network.Server
 import Network.Socket.ByteString
+import Parser
+import Text.Parsec
+import Data.Char (chr)
+unpackToString :: BS.ByteString -> String
+unpackToString = map (chr . fromEnum) . BS.unpack
 
 main :: IO ()
-main = SP.drain sockStream
+main =  do
+  x <- SP.drain $ sockStream
+  print  $ x
 
 sockStream :: SerialT IO Int
 sockStream = SP.concatMapBy wAsync (`NS.withSocketS` (\so -> SP.yieldM (do
-                                                                           print =<< recv so 4096
+                                                                           x <- recv so 4096
+                                                                           let y = unpackToString x
+                                                                           print $ runParser requestParser "" ""  y
                                                                            send so "done"))) (serially $ connectionsOnAllAddrs 8081)
