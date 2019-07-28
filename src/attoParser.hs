@@ -11,14 +11,26 @@ import Data.Char(toUpper)
 data Method = GET | POST deriving (Show)
 data Protocol = HTTP | HTTPS | FTP deriving (Show)
 data Request = Request
-      {  method   :: BS.ByteString
+      {  method   :: Method
         ,path     :: BS.ByteString
-        ,protocol :: BS.ByteString
+        ,protocol :: Protocol
         ,version  :: BS.ByteString
         ,headers  :: [(BS.ByteString , BS.ByteString)]
         ,body     :: BS.ByteString
       } deriving (Show)
 
+toMethod :: BS.ByteString -> Method
+toMethod method = case toUpper <$> (BS.unpack  method) of
+  "GET"  -> GET
+  "POST" -> POST
+  _      -> GET
+
+toProtocol :: BS.ByteString -> Protocol
+toProtocol protocol = case toUpper <$> (BS.unpack protocol) of
+  "HTTP"  -> HTTP
+  "HTTPS" -> HTTPS
+  "FTP"   -> FTP
+  _ -> HTTP
 
 urlEncodedParserToJson = fmap catMaybes $ AP.many' $
                 AP.choice [Just <$> getBody , Nothing <$ checkEndOfInput]
@@ -32,11 +44,11 @@ urlEncodedParserToJson = fmap catMaybes $ AP.many' $
     checkEndOfInput = AP.endOfInput
 
 requestParser = do
-  method   <- AP.takeWhile (/= ' ')
+  method   <- toMethod <$> AP.takeWhile (/= ' ')
   AP.char ' '
   path     <- AP.takeWhile (/= ' ')
   AP.char ' '
-  protocol <- AP.takeWhile (/= '/')
+  protocol <- toProtocol <$> AP.takeWhile (/= '/')
   AP.char '/'
   version  <- AP.takeWhile (/='\r')
   AP.endOfLine
@@ -60,6 +72,7 @@ requestParser = do
     getHeaders = do
       key <- AP.takeTill (== ':')
       AP.char(':')
+      _ <- AP.takeWhile (==' ')
       value <-  AP.takeWhile (/= '\r')
       AP.endOfLine
       return (key,value)
