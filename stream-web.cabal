@@ -69,7 +69,8 @@ executable stream-web
                       , aeson
                       , bytestring
                       , mtl
-                      ,parsec
+                      , parsec
+                      , attoparsec
 
   -- Directories containing source files.
   hs-source-dirs:      src
