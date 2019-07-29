@@ -1,5 +1,5 @@
 {-# Language OverloadedStrings #-}
-module  AttoParser where
+module AttoParser where
 
 import qualified Data.Attoparsec.ByteString.Char8 as AP
 import qualified Data.ByteString.Char8 as BS

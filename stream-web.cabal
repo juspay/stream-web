@@ -57,7 +57,10 @@ executable stream-web
   main-is:             Main.hs
 
   -- Modules included in this executable, other than Main.
-  -- other-modules:
+  other-modules:       AttoParser
+                      , Types
+                      , Parser
+                      , Utils
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
