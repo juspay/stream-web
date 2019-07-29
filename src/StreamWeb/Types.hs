@@ -1,10 +1,10 @@
-{-# LANGUAGE DeriveGeneric #-}
-module Types where
+module StreamWeb.Types where
 
 import GHC.Generics
 import GHC.Show
 import Data.ByteString
 import Control.Monad.State
+import qualified Data.ByteString.Char8 as BS
 
 type Action m = Request -> m ByteString
 newtype StreamW e m a = StreamW {runS :: State (StreamState e m) a}
@@ -21,14 +21,16 @@ data Route m = Route
                , action :: Request -> m ByteString
                }
 
+data Method = GET | POST deriving (Show)
+data Protocol = HTTP | HTTPS | FTP deriving (Show)
 data Request = Request
-               { method  :: Method
-               , path    :: String
-               , body    :: ByteString
-               , headers :: [Header]
-               } deriving (Show, Generic)
-
-data Method = GET | POST deriving (Show, Generic)
+      {  method   :: Method
+        ,path     :: BS.ByteString
+        ,protocol :: Protocol
+        ,version  :: BS.ByteString
+        ,headers  :: [(BS.ByteString , BS.ByteString)]
+        ,body     :: BS.ByteString
+      } deriving (Show)
 
 type Header = (ByteString, ByteString)
 

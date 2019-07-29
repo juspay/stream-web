@@ -39,26 +39,25 @@ data Request = Request
         ,body    :: String
       } deriving (Show)
 --------------------------------------------------------------------------------
-applicationJsonParser  = do
-  body <- manyTill anyChar eof
-  return body
+applicationJsonParser = manyTill anyChar eof
 
 urlEncodedParser = many $ do
   key <- try $ manyTill anyChar (char '=')
-  value <- try $ manyTill anyChar (choice [(char '&'), (eof >> pure '|')])
+  value <- try $ manyTill anyChar (choice [char '&', eof >> pure '|'])
   return ("\"" ++ key ++ "\" : \"" ++ value ++ "\" , ")
 
 toMethod :: String -> Method
 toMethod method = case toUpper <$> method  of
   "POST"       -> POST
   "GET"        -> GET
-  otherwise    -> GET
+  _            -> GET
+
 toProtocol :: String -> Protocol
 toProtocol protocol = case toUpper <$> protocol of
   "HTTPS"      -> HTTPS
   "HTTP"       -> HTTP
   "FTP"        -> FTP
-  otherwise    -> HTTP
+  _            -> HTTP
 
 extractQueryParam = do
   path        <- many $ do
@@ -66,11 +65,11 @@ extractQueryParam = do
                  return $ path1 ++ "/"
   routeParams <- many $ do
                  _     <- try $ manyTill anyChar (char ':')
-                 value <- try $ manyTill anyChar (choice [(char '/'),(eof >> pure '|')])
+                 value <- try $ manyTill anyChar (choice [char '/',eof >> pure '|'])
                  return value
   queryParams <- many $ do
                  key <-  try $ manyTill anyChar  (char '=')
-                 value <- try $ manyTill anyChar (choice [(char '/'),(eof >> pure '|')])
+                 value <- try $ manyTill anyChar (choice [char '/',eof >> pure '|'])
                  return (key,value)
   return (path,routeParams,queryParams)
 
@@ -96,18 +95,18 @@ requestParser = do
               Just (_, " application/json")                  -> applicationJsonParser
               Just (_, " application/x-www-form-urlencoded") -> do
                                                                 res <- urlEncodedParser
-                                                                return $ "{ " ++ (concat res )++ " }"
+                                                                return $ "{ " ++ concat res ++ " }"
               Just (_,_)                                     -> applicationJsonParser
               Nothing                                        -> applicationJsonParser
  let pathAndParams = getPathAndParams path
- return $ Request { method = method
-                   ,path   = concat $ fst' $ pathAndParams
-                   ,routeParams = snd' $ pathAndParams
-                   ,queryParam = trd' $ pathAndParams
-                   ,protocol = protocol
-                   ,version = version
-                   ,headers = headers
-                   ,body    = body
+ return $ Request  { method = method
+                   , path   = concat $ fst' pathAndParams
+                   , routeParams = snd' pathAndParams
+                   , queryParam = trd' pathAndParams
+                   , protocol = protocol
+                   , version = version
+                   , headers = headers
+                   , body    = body
                   }
   where
      fst' (a,_,_) = a

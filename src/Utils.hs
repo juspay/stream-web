@@ -2,7 +2,7 @@
 
 module Utils where
 
-import Types
+import StreamWeb.Types
 import Control.Monad.State
 
 addRoute :: forall e m a. Method -> RoutePattern -> Action m -> StreamW e m ()
