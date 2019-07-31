@@ -1,8 +1,11 @@
+{-# Language OverloadedStrings #-}
 module Main where
 
 import StreamWeb
 import Network.Socket.ByteString (recv, send)
-import Utils
+import StreamWeb.Utils
+import Control.Exception
+import qualified Streamly.Prelude as SP
 
 main :: IO ()
-main =  startServer (\s r -> sendJson s r "hie")
+main = SP.drain $ startServer 8081

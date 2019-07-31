@@ -57,8 +57,8 @@ library
                   , StreamWeb.Types
 
   -- Modules included in this library but not exported.
-  other-modules:    AttoParser
-                  , Utils
+  other-modules:    StreamWeb.AttoParser
+                  , StreamWeb.Utils
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -72,6 +72,7 @@ library
                       , mtl
                       , parsec
                       , attoparsec
+                      , array
 
   -- Directories containing source files.
   hs-source-dirs:      src
@@ -84,10 +85,9 @@ executable stream-web
   main-is:            Main.hs
 
   -- Modules included in this executable, other than Main.
-  other-modules:       AttoParser
+  other-modules:       StreamWeb.AttoParser
                       , StreamWeb.Types
-                      , Parser
-                      , Utils
+                      , StreamWeb.Utils
                       , StreamWeb
 
   -- LANGUAGE extensions used by modules in this package.
@@ -102,6 +102,7 @@ executable stream-web
                       , mtl
                       , parsec
                       , attoparsec
+                      , array
 
   -- Directories containing source files.
   hs-source-dirs:      src
