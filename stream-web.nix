@@ -1,16 +1,16 @@
-{ mkDerivation, aeson, base, bytestring, containers, errors, extra, http-client,  http-types, network, stdenv, streamly, warp , parsec , attoparsec, mtl
+{ mkDerivation, aeson, base, bytestring, array, network, stdenv, streamly, attoparsec, mtl
 }:
 mkDerivation {
   pname = "stream-web";
   version = "0.0.1";
   src = ./.;
-  isLibrary = false;
+  isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    aeson attoparsec base bytestring mtl network parsec streamly
+    aeson attoparsec base bytestring mtl network streamly array
   ];
   executableHaskellDepends = [
-    aeson base bytestring containers errors extra http-client http-types network streamly warp parsec attoparsec
+    aeson base bytestring network streamly mtl attoparsec array
   ];
   description = "Web Server";
   license = "BSD3";

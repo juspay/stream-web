@@ -70,7 +70,6 @@ library
                       , aeson
                       , bytestring
                       , mtl
-                      , parsec
                       , attoparsec
                       , array
 
@@ -100,7 +99,6 @@ executable stream-web
                       , aeson
                       , bytestring
                       , mtl
-                      , parsec
                       , attoparsec
                       , array
 
