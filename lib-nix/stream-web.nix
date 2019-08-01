@@ -4,9 +4,9 @@ mkDerivation {
   pname = "stream-web";
   version = "0.0.1";
   src = fetchgit {
-    url = "https://github.com/aravindgopall/stream-web.git";
-    rev = "4b9d5fed4b252c63550db793935e57b77c0e0f84";
-    sha256 = "0b3nn1ndjvyrgxbhz07b6qqpshh8caa6l7gsn5vx1avggd8x8fk4";
+    url = "https://github.com/juspay/stream-web.git";
+    rev = "ce6138e17260cad816c8d16685f5eef45d08a317";
+    sha256 = "1l50yr9gf385grj3v3z11gblas9bbv6zsafpx0ldppg9bvdsdnfp";
     fetchSubmodules = true;
   };
   isLibrary = true;
