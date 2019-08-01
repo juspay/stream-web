@@ -1,12 +1,12 @@
 {-# Language OverloadedStrings #-}
-module StreamWeb (startServer, sendJson, sendStatus) where
+module StreamWeb (startServer, sendJson, sendStatus, sendWithStatus) where
 
 import Streamly                  (SerialT, wAsync, serially, IsStream)
 import Streamly.Network.Server   (connectionsOnAllAddrs)
 import Network.Socket.ByteString (recv, send)
 import Data.List                 (find)
 import Data.Functor              (($>))
-import StreamWeb.Utils           (lowercase, sendStatus, sendJson)
+import StreamWeb.Utils           (lowercase, sendStatus, sendJson, sendWithStatus)
 import StreamWeb.AttoParser      (tillHeaderParser, requestParser)
 
 import qualified Data.ByteString as BS

@@ -38,12 +38,16 @@ sendJson so req res = do
 sendStatus :: NS.Socket -> Int -> IO ()
 sendStatus so status = do
   let msg   = getMessage status
-      first = "HTTP/1.1" <> BC.pack (show status) <> " " <> msg
+  sendWithStatus so status msg ["Content-Type: text/html"]
+
+sendWithStatus :: NS.Socket -> Int -> ByteString -> [ByteString] -> IO ()
+sendWithStatus so status msg headersI = do
+  let first = "HTTP/1.1" <> BC.pack (show status) <> " " <> msg
       contentLength = BS.length msg
-      headers = intercalate "\r\n" [ "Content-Type: text/html; charset=ISO-8859-4"
-                                   , "Content-Lenght: " <> (BC.pack . show $ contentLength)
-                                   , "Connection: Close"
-                                   ]
+      headers = intercalate "\r\n" (headersI <>
+                                      [ "Content-Length: " <> (BC.pack . show $ contentLength)
+                                      , "Connection: Close"
+                                      ])
   send so (first <> "\r\n" <> headers <> "\r\n\n" <> msg) *> NS.close so
 
 getMessage :: Int -> ByteString
