@@ -26,11 +26,13 @@ data Route m = Route
 
 data Method =
      GET |
-     POST deriving (Show)
+     POST deriving (Show, Eq)
+
 data Protocol =
      HTTP  |
      HTTPS |
      FTP deriving (Show)
+
 data Request = Request
       { method   :: Method
       , path     :: BS.ByteString

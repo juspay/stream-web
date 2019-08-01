@@ -26,6 +26,7 @@ toStrict = BS.concat . BL.toChunks
 
 ctypeLower = listArray (0,255) (map (BI.c2w . toLower) ['\0'..'\255']) :: UArray Word8 Word8
 
+lowercase :: ByteString -> ByteString
 lowercase = BS.map (ctypeLower!)
 
 sendJson :: forall a. ToJSON a => NS.Socket -> Request -> a -> IO ()
@@ -36,8 +37,14 @@ sendJson so req res = do
 
 sendStatus :: NS.Socket -> Int -> IO ()
 sendStatus so status = do
-  let first = "HTTP/1.1" <> BC.pack (show status) <> " " <> getMessage status
-  send so first *> NS.close so
+  let msg   = getMessage status
+      first = "HTTP/1.1" <> BC.pack (show status) <> " " <> msg
+      contentLength = BS.length msg
+      headers = intercalate "\r\n" [ "Content-Type: text/html; charset=ISO-8859-4"
+                                   , "Content-Lenght: " <> (BC.pack . show $ contentLength)
+                                   , "Connection: Close"
+                                   ]
+  send so (first <> "\r\n" <> headers <> "\r\n\n" <> msg) *> NS.close so
 
 getMessage :: Int -> ByteString
 getMessage 200 = "OK"
@@ -50,7 +57,7 @@ buildResponse req res =
   let first = "HTTP/" <> version req <> " 200 OK"
       contentLength = BS.length res
       headers =intercalate "\r\n" [ "Content-Type: application/json"
-                                  , "Connection: Closed"
+                                  , "Connection: Close"
                                   , "Content-Length: " <> (BC.pack . show $ contentLength)
                                   ]
    in first <> "\r\n" <> headers <> "\r\n\n" <> res
