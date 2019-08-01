@@ -42,7 +42,7 @@ sendStatus so status = do
 
 sendWithStatus :: NS.Socket -> Int -> ByteString -> [ByteString] -> IO ()
 sendWithStatus so status msg headersI = do
-  let first = "HTTP/1.1" <> BC.pack (show status) <> " " <> msg
+  let first = "HTTP/1.1" <> BC.pack (show status) <> " " <> getMessage status
       contentLength = BS.length msg
       headers = intercalate "\r\n" (headersI <>
                                       [ "Content-Length: " <> (BC.pack . show $ contentLength)
@@ -55,6 +55,7 @@ getMessage 200 = "OK"
 getMessage 411 = "Length Required"
 getMessage 413 = "Request Entity Too Large"
 getMessage 500 = "Internal Server Error"
+getMessage _   = "Response"
 
 buildResponse :: Request -> ByteString -> ByteString
 buildResponse req res =
