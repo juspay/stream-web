@@ -17,9 +17,7 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Internal as BI
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Char8 as BC
-
-addRoute :: forall e m a. Method -> RoutePattern -> Action m -> StreamW e m ()
-addRoute method pat action = StreamW $ modify $ \s -> s { routes = Route method pat action : routes s}
+import qualified Data.HashMap.Lazy as Map
 
 toStrict :: BL.ByteString -> ByteString
 toStrict = BS.concat . BL.toChunks
@@ -52,6 +50,7 @@ sendWithStatus so status msg headersI = do
 
 getMessage :: Int -> ByteString
 getMessage 200 = "OK"
+getMessage 400 = "Bad Request"
 getMessage 411 = "Length Required"
 getMessage 413 = "Request Entity Too Large"
 getMessage 500 = "Internal Server Error"
@@ -66,3 +65,6 @@ buildResponse req res =
                                   , "Content-Length: " <> (BC.pack . show $ contentLength)
                                   ]
    in first <> "\r\n" <> headers <> "\r\n\n" <> res
+
+routeParams :: ByteString -> ByteString -> Map.HashMap ByteString ByteString
+routeParams x y = mempty

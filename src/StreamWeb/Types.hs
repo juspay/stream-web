@@ -1,9 +1,14 @@
-module StreamWeb.Types where
+module StreamWeb.Types
+  ( Request  (..)
+  , Method   (..)
+  , Protocol (..)
+  ) where
 
 import GHC.Generics
 import GHC.Show
 import Data.ByteString
 import Control.Monad.State
+import qualified Data.HashMap.Lazy as Map
 import qualified Data.ByteString.Char8 as BS
 
 type Action m = Request -> m ByteString
@@ -36,6 +41,7 @@ data Protocol =
 data Request = Request
       { method   :: Method
       , path     :: BS.ByteString
+      , queryParams :: Map.HashMap BS.ByteString BS.ByteString
       , protocol :: Protocol
       , version  :: BS.ByteString
       , headers  :: [(BS.ByteString , BS.ByteString)]
