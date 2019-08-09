@@ -66,5 +66,11 @@ buildResponse req res =
                                   ]
    in first <> "\r\n" <> headers <> "\r\n\n" <> res
 
+corsHeaders :: [ByteString]
+corsHeaders = [ "Access-Control-Allow-Origin: *"
+              , "Access-Control-Allow-Methods: *"
+              , "Access-Control-Allow-Headers: *"
+              ]
+
 routeParams :: ByteString -> ByteString -> Map.HashMap ByteString ByteString
 routeParams x y = mempty

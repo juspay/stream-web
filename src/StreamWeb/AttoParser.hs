@@ -40,13 +40,14 @@ requestParser req = do
   return req {body}
 
 toMethod :: BS.ByteString -> Method
-toMethod method = case toUpper <$> BS.unpack  method of
+toMethod method = case BS.unpack  method of
   "GET"  -> GET
   "POST" -> POST
+  "OPTIONS" -> OPTIONS
   _      -> GET
 
 toProtocol :: BS.ByteString -> Protocol
-toProtocol protocol = case toUpper <$> BS.unpack protocol of
+toProtocol protocol = case BS.unpack protocol of
   "HTTP"  -> HTTP
   "HTTPS" -> HTTPS
   "FTP"   -> FTP

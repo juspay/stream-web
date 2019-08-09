@@ -30,8 +30,9 @@ data Route m = Route
                }
 
 data Method =
-     GET |
-     POST deriving (Show, Eq)
+     OPTIONS |
+     GET     |
+     POST    deriving (Show, Eq)
 
 data Protocol =
      HTTP  |
