@@ -34,7 +34,7 @@ requestParser req = do
                Just (_, "application/json")                  -> AP.takeByteString
                Just (_, "application/x-www-form-urlencoded") -> do
                                                                  res <- urlEncodedParserToJson
-                                                                 return $ "{ " <> BS.concat res  <> " }"
+                                                                 return $ "{ " <> BS.intercalate "," res  <> " }"
                Just (_,_)                                     -> AP.takeByteString
                Nothing                                        -> AP.takeByteString
   return req {body}
@@ -53,15 +53,14 @@ toProtocol protocol = case BS.unpack protocol of
   "FTP"   -> FTP
   _ -> HTTP
 
-urlEncodedParserToJson = fmap catMaybes . AP.many' . AP.choice $ [Just <$> getBody , Nothing <$ checkEndOfInput]
+urlEncodedParserToJson = AP.many' getBody
   where
     getBody = do
               key   <- AP.takeWhile (/= '=')
               AP.char '='
               value <- AP.takeWhile (/= '&')
-              AP.char '&'
-              return  ("\"" <> key <> "\" : \"" <> value <> "\" , ")
-    checkEndOfInput = AP.endOfInput
+              AP.choice [' ' <$ AP.endOfInput, AP.char '&']
+              return  ("\"" <> key <> "\" : " <> value)
 
 getHeaders :: AP.Parser (BS.ByteString, BS.ByteString)
 getHeaders = do
