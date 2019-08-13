@@ -6,4 +6,4 @@ import qualified Streamly as S
 import StreamWeb.Types
 
 main :: IO ()
-main = SP.drain $ S.parallely $ SP.mapM (\(so, req) -> print (queryParams req) *> sendJson so req "OKDONE") $ startServer 8081
+main = SP.drain $ S.parallely $ SP.mapM (\(so, req) -> sendJson so req "OKDONE") $ startServer 8081

@@ -16,3 +16,14 @@ StreamWeb exposed three different functions to work with responses
 * sendWithStatus will take ByteString, status and headers and build response
 
 **Maximum Size of headers is 2K and unless a GET request, without Content-Length request won't be processed**
+
+# Supported Features
+* Content-Length based request parser
+* CORS support
+
+#TODO
+* Middlewares support (critical)
+* Add new api support (critical)
+* Chunk Transfer based request parser (non-critical)
+* Accept Ranges (non-critical)
+

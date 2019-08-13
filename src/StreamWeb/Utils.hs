@@ -30,7 +30,6 @@ lowercase = BS.map (ctypeLower!)
 sendJson :: forall a. ToJSON a => NS.Socket -> Request -> a -> IO ()
 sendJson so req res = do
   let res' = buildResponse req . toStrict . encode $ res
-  print res'
   send so res' *> NS.close so
 
 sendStatus :: NS.Socket -> Int -> IO ()
@@ -40,7 +39,7 @@ sendStatus so status = do
 
 sendWithStatus :: NS.Socket -> Int -> ByteString -> [ByteString] -> IO ()
 sendWithStatus so status msg headersI = do
-  let first = "HTTP/1.1" <> BC.pack (show status) <> " " <> getMessage status
+  let first = "HTTP/1.1 " <> BC.pack (show status) <> " " <> getMessage status
       contentLength = BS.length msg
       headers = intercalate "\r\n" (headersI <>
                                       [ "Content-Length: " <> (BC.pack . show $ contentLength)

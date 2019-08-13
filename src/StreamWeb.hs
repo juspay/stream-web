@@ -24,7 +24,6 @@ startServer portNumber =
        (\so ->
           SP.yieldM $ do
             x <- recv so 2048 -- maximum size of headers
-            print x
             case AP.parse tillHeaderParser x of
               AP.Done rem r ->
                 if T.method r == T.OPTIONS then sendWithStatus so 200 "OK" corsHeaders $> Nothing
@@ -37,10 +36,7 @@ startServer portNumber =
                         case AP.parseOnly (requestParser r) body of
                           Right req -> return $ Just (so, req)
                           Left  err -> send so (BC.pack err) $> Nothing
-                      Nothing ->
-                        if T.GET == T.method r
-                        then return $ Just (so, r)
-                        else print "No Content-Length header field" *> sendStatus so 413 $> Nothing
+                      Nothing -> print "No Content-Length header field" *> sendStatus so 413 $> Nothing
               _ -> print "Parse Failed because all the headers are not received" *> sendStatus so 413 $> Nothing
         )
         (serially $ connectionsOnAllAddrs portNumber)

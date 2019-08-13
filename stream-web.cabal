@@ -60,6 +60,9 @@ library
   other-modules:    StreamWeb.AttoParser
                   , StreamWeb.Utils
 
+  ghc-options:      -O2
+                    -fspec-constr-recursive=10
+
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
 
@@ -90,6 +93,9 @@ executable stream-web
                       , StreamWeb.Utils
                       , StreamWeb
 
+  ghc-options:      -O2
+                    -fspec-constr-recursive=10
+                    -threaded
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
 
