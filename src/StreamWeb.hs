@@ -36,7 +36,9 @@ startServer portNumber =
                         case AP.parseOnly (requestParser r) body of
                           Right req -> return $ Just (so, req)
                           Left  err -> send so (BC.pack err) $> Nothing
-                      Nothing -> print "No Content-Length header field" *> sendStatus so 413 $> Nothing
+                      Nothing -> if T.method r == T.GET
+                                then return $ Just (so, r)
+                                else print "No Content-Length header field" *> sendStatus so 411 $> Nothing
               _ -> print "Parse Failed because all the headers are not received" *> sendStatus so 413 $> Nothing
         )
         (serially $ connectionsOnAllAddrs portNumber)
