@@ -2,6 +2,7 @@
 , exceptions, fetchgit, gauge, ghc-prim, heaps, hspec
 , lockfree-queue, monad-control, mtl, network, QuickCheck, random
 , stdenv, transformers, transformers-base, typed-process
+, hashable, text, time
 }:
 mkDerivation {
   pname = "streamly";

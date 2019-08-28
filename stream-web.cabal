@@ -76,6 +76,9 @@ library
                       , attoparsec
                       , array
                       , unordered-containers
+                      , hashable
+                      , text
+                      , time
 
   -- Directories containing source files.
   hs-source-dirs:      src
@@ -109,6 +112,9 @@ executable stream-web
                       , attoparsec
                       , array
                       , unordered-containers
+                      , hashable
+                      , text
+                      , time
 
   -- Directories containing source files.
   hs-source-dirs:      src
